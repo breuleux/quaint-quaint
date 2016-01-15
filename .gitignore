@@ -1,0 +1,5 @@
+*~
+node_modules
+egcache
+lib
+client/quaint.js

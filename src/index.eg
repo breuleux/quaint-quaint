@@ -1,0 +1,100 @@
+
+require:
+   quaint -> tools ->
+      dedent, raw-relative
+   quaint-javascript
+   quaint-highlight
+   fs, path
+
+paths = {
+   work = path.join{__dirname, "../client/work.js"}
+   start = path.join{__dirname, "../client/start.js"}
+   edit = path.join{__dirname, "../client/quaint.js"}
+   hl = path.join{__dirname, "../client/highlight.pack.js"}
+}
+
+files = {
+   work = fs.read-file-sync{paths.work, .utf8}
+   start = fs.read-file-sync{paths.start, .utf8}
+   edit = fs.read-file-sync{paths.edit, .utf8}
+   hl = fs.read-file-sync{paths.hl, .utf8}
+}
+
+
+install{@, options} =
+
+   @register-macros with {
+      .method{engine, spec, description} =
+         {=> name, => args} = spec.extract{"\\name(\\maybe\\args)"}
+         {
+            engine.into{.sections, {2, code % name.raw{}, name.raw{}}}
+            div.qmethod %
+               h2 %
+                  id = name.raw{}
+                  code % spec.raw{}
+               div.qmethod-description %
+                  engine.gen{description}
+         }
+   }
+
+   @register-rules with {
+      "\\maybe\\rows && \\body"{engine, {=> body, => rows}} =
+         q = quaint{}
+         q.register-resolvers with {
+            default{filename, options} =
+               {file and path = filename, contents and text = ""}
+         }
+         q.plug{quaint-javascript, quaint-highlight}
+         b = dedent{raw-relative{body}}.trim{}
+         div.quaint-example %
+            div.input %
+               textarea %
+                  rows = if{rows.raw{}.trim{}, rows.raw{}, b.split{"\n"}.length}
+                  b
+            div.output %
+               raw % q.toHTML{b} ;;, paragraph = true}
+   }
+
+   @register-resources with {
+      "quaint/work.js" => {
+         path = paths.work
+         contents = files.work.replace{R.g"%%RESOURCES%%"} with
+            @documents.meta.get-raw{"resourceRoot"}
+         type = null
+      }
+      "quaint/start.js" => {
+         path = paths.start
+         contents = files.start.replace{R.g"%%RESOURCES%%"} with
+            @documents.meta.get-raw{"resourceRoot"}
+         type = .js
+         method = .head
+      }
+      "quaint/start.js/main" => {
+         path = null
+         contents = '$$quaintQuaintMain();'
+         type = .js
+         method = .body
+         inline = true
+      }
+      "quaint/quaint.js" => {
+         path = paths.edit
+         contents = files.edit
+         type = .js
+         method = .head
+      }
+      "quaint/highlight.pack.js" => {
+         path = paths.hl
+         contents = files.hl
+         type = .js
+         method = .head
+      }
+   }
+
+
+main{*match} =
+   {@, options = {=}} when @is-quaint-engine ->
+      install{@, options}
+   {options = {=}} ->
+      {@} -> main{@, options}
+
+provide = main

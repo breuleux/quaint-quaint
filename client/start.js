@@ -1,0 +1,24 @@
+
+function $$quaintQuaintMain() {
+    var lastId = 0;
+    var targets = {};
+    var worker = new Worker("%%RESOURCES%%/quaint/work.js");
+    worker.onmessage = function (m) {
+        var id = m.data[0];
+        var text = m.data[1];
+        targets[id].innerHTML = text;
+    }
+    var eds = document.querySelectorAll(".quaint-example");
+    for (var i = 0; i < eds.length; i++) {
+        var ed = eds[i];
+        lastId++;
+        var id = lastId;
+        var editor = ed.children[0].children[0];
+        var target = ed.children[1];
+        targets[id] = target;
+        worker.postMessage([id, editor.value, false]);
+        editor.onkeyup = function (e) {
+            worker.postMessage([id, editor.value, true]);
+        }
+    }
+}
