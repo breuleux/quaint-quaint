@@ -14,14 +14,15 @@ Interactive Quaint textboxes in Quaint documents
 ```quaint
 Edit this:
 
-10 && Quaint is __awesome!
-
-Also this:
-
 &&
-  One
-  Two
-  Three-lines editor
+  Quaint is __awesome!
+  # One
+  # Two
+  # Three
+
+Ten-lines-high uninitialized editor:
+
+10 &&
 ```
 
 The generated code will look like this:

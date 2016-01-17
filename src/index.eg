@@ -44,7 +44,7 @@ install{@, _options} =
    }
 
    @register-rules with {
-      "\\maybe\\rows && \\body"{engine, {=> body, => rows}} =
+      "\\maybe\\rows && \\maybe\\body"{engine, {=> body, => rows}} =
          b = dedent{raw-relative{body}}.trim{}
          out =
             if options.pre-compute:
