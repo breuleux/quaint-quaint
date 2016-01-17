@@ -1,7 +1,16 @@
 
 # quaint-quaint
 
-Interactive Quaint textboxes in Quaint documents
+Interactive Quaint textboxes in Quaint documents.
+
+`quaint-quaint` will automatically start a Quaint interpreter
+listening to changes to one or more textareas and running in a
+separate Worker. For each marked `textarea`, an output `div` is
+created and will be updated automatically with the result of the
+compilation of the current contents.
+
+`quaint-quaint` does not define a stylesheet, but it should not be
+very complicated to style. See below for the generated HTML.
 
 
 ## Install
@@ -46,11 +55,11 @@ to style the above yourself.
 
 ## Rules
 
-### `<nrows> && text`
+### `nrows && body`
 
-Creates an interactive Quaint editor initialized with `text`, and with
+Creates an interactive Quaint editor initialized with `body`, and with
 `nrows` rows of text. If `nrows` is unspecified, then the number of
-lines in `text` will be used (line wrapping is not taken into
+lines in `body` will be used (line wrapping is not taken into
 account).
 
 
