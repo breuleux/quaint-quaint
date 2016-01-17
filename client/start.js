@@ -8,7 +8,7 @@ function $$quaintQuaintMain() {
         var text = m.data[1];
         targets[id].innerHTML = text;
     }
-    var eds = document.querySelectorAll(".quaint-example");
+    var eds = document.querySelectorAll(".quaint-interactive");
     for (var i = 0; i < eds.length; i++) {
         var ed = eds[i];
         lastId++;
@@ -17,8 +17,10 @@ function $$quaintQuaintMain() {
         var target = ed.children[1];
         targets[id] = target;
         worker.postMessage([id, editor.value, false]);
-        editor.onkeyup = function (e) {
-            worker.postMessage([id, editor.value, true]);
-        }
+        editor.onkeyup = (function (id, editor) {
+            return function (e) {
+                worker.postMessage([id, editor.value, true]);
+            }
+        })(id, editor);
     }
 }

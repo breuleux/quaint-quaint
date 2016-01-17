@@ -20,8 +20,14 @@ files = {
    hl = fs.read-file-sync{paths.hl, .utf8}
 }
 
+defaults = {
+   pre-compute = true
+}
 
-install{@, options} =
+
+install{@, _options} =
+
+   options = defaults & _options
 
    @register-macros with {
       .method{engine, spec, description} =
@@ -39,20 +45,25 @@ install{@, options} =
 
    @register-rules with {
       "\\maybe\\rows && \\body"{engine, {=> body, => rows}} =
-         q = quaint{}
-         q.register-resolvers with {
-            default{filename, options} =
-               {file and path = filename, contents and text = ""}
-         }
-         q.plug{quaint-javascript, quaint-highlight}
          b = dedent{raw-relative{body}}.trim{}
-         div.quaint-example %
-            div.input %
+         out =
+            if options.pre-compute:
+               q = quaint{}
+               q.register-resolvers with {
+                  default{filename, options} =
+                     {file and path = filename, contents and text = ""}
+               }
+               q.plug{quaint-javascript, quaint-highlight}
+               q.toHTML{b} ;;, paragraph = true}
+            else:
+               ""
+         div.quaint-interactive %
+            div.quaint-input %
                textarea %
                   rows = if{rows.raw{}.trim{}, rows.raw{}, b.split{"\n"}.length}
                   b
-            div.output %
-               raw % q.toHTML{b} ;;, paragraph = true}
+            div.quaint-output %
+               raw % out
    }
 
    @register-resources with {
