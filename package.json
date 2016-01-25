@@ -22,8 +22,8 @@
     "earlgrey": ">=0.0.13",
     "mocha": "^2.2.1",
     "quaint": ">=0.0.13",
-    "quaint-javascript": ">=0.0.6",
-    "quaint-highlight": ">=0.0.6",
+    "quaint-javascript": ">=0.0.8",
+    "quaint-highlight": ">=0.0.7",
     "earl-mocha": ">=0.0.3"
   },
   "scripts": {
