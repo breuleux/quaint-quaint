@@ -15,7 +15,7 @@ very complicated to style. See below for the generated HTML.
 
 ## Install
 
-    npm install quaint-quaint -g
+    quaint --setup quaint
 
 
 ## Sample use
